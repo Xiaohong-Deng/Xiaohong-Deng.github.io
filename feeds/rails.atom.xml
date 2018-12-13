@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Shawn's Den - rails</title><link href="https://shawnsden.ga/" rel="alternate"></link><link href="https://shawnsden.ga/feeds/rails.atom.xml" rel="self"></link><id>https://shawnsden.ga/</id><updated>2017-08-16T05:51:00+08:00</updated><subtitle>Computing, Programming and Data</subtitle><entry><title>Jasmine Setup in UCB CS169x and SaaS Book</title><link href="https://shawnsden.ga/articles/jasmine-setup-in-ucb-cs169x-and-saas-book.html" rel="alternate"></link><published>2017-08-16T05:51:00+08:00</published><updated>2017-08-16T05:51:00+08:00</updated><author><name>Xiaohong Deng</name></author><id>tag:shawnsden.ga,2017-08-16:/articles/jasmine-setup-in-ucb-cs169x-and-saas-book.html</id><summary type="html">&lt;p&gt;You can use either &lt;code&gt;gem jasmine&lt;/code&gt; or &lt;code&gt;gem jasmine-rails&lt;/code&gt; to set up Jasmine framework in your rails apps. In the SaaS book, it uses the latter. &lt;code&gt;gem jasmine-jquery-rails&lt;/code&gt; is one way to exploit the extra matchers and fixtures loading feature from &lt;code&gt;jasmine-jquery&lt;/code&gt;. It needs jquery as a prerequisite.&lt;/p&gt;
+&lt;p&gt;You won't …&lt;/p&gt;</summary><content type="html">&lt;p&gt;You can use either &lt;code&gt;gem jasmine&lt;/code&gt; or &lt;code&gt;gem jasmine-rails&lt;/code&gt; to set up Jasmine framework in your rails apps. In the SaaS book, it uses the latter. &lt;code&gt;gem jasmine-jquery-rails&lt;/code&gt; is one way to exploit the extra matchers and fixtures loading feature from &lt;code&gt;jasmine-jquery&lt;/code&gt;. It needs jquery as a prerequisite.&lt;/p&gt;
+&lt;p&gt;You won't be able to run jasmine tests in the browser smoothly by just following the SaaS book $6.7. At least not by Aug. 2017.&lt;/p&gt;
+&lt;p&gt;First make sure you installed &lt;code&gt;gem jasmine-rails&lt;/code&gt; and &lt;code&gt;gem jasmine-jquery-rails&lt;/code&gt;. After &lt;code&gt;rails g jasmine_rails:install&lt;/code&gt;, add &lt;code&gt;//= require jasmine-jquery&lt;/code&gt; to &lt;code&gt;application.js&lt;/code&gt;. Alternatively, &lt;code&gt;jasmine-jquery-rails&lt;/code&gt; can be included by adding &lt;code&gt;src_file: - assets/jasmine-jquery.js&lt;/code&gt; to &lt;code&gt;jasmine.yml&lt;/code&gt;. This would load matchers from &lt;code&gt;jasmine-jquery&lt;/code&gt;. Both &lt;code&gt;gem jasmine-rails&lt;/code&gt; and &lt;code&gt;gem jasmine&lt;/code&gt; depend on it. The default fixtures loading path is &lt;code&gt;spec/javascripts/fixtures&lt;/code&gt; but testing in the browser is not able to load fixtures. The workaround can be found at &lt;a href="https://github.com/travisjeffery/jasmine-jquery-rails/issues/4"&gt;this jasmine-jquery-rails issue&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;You need to create a &lt;code&gt;config/initializers/jasmine_fixtures.rb&lt;/code&gt; and fill it with&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Map fixtures directory for Jasmine suite&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;defined?&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;Jasmine&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Jquery&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Rails&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Engine&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="no"&gt;JasmineFixtureServer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Proc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;env&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+    &lt;span class="no"&gt;Rack&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Directory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;spec/javascripts/fixtures&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;call&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;env&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Then open &lt;code&gt;routes.rb&lt;/code&gt; and add&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;  &lt;span class="c1"&gt;# mount spec/javascripts/fixtures directory&lt;/span&gt;
+  &lt;span class="n"&gt;mount&lt;/span&gt; &lt;span class="no"&gt;JasmineFixtureServer&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/spec/javascripts/fixtures&amp;#39;&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;defined?&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;Jasmine&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Jquery&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Rails&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Engine&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;On &lt;a href="https://github.com/travisjeffery/jasmine-jquery-rails"&gt;jasmine-jquery-rails github page&lt;/a&gt; it implies that it takes effect through asset pipeline. That explains why the above settings are effective in browser but when you run &lt;code&gt;rake spec:javascript&lt;/code&gt; in CLI it fails.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;jasmine-rails&lt;/code&gt; doesn't support fixtures. It recommend &lt;a href="https://github.com/searls/jasmine-fixture"&gt;jasmine-fixture&lt;/a&gt;. It provides syntax for loading fixtures that is different from &lt;code&gt;jasmine-jquery&lt;/code&gt;. So in order to use it you need to rewrite part of your tests first. So much for loading fixtures while testing in CLI using &lt;code&gt;jasmine-rails&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;After you did all the settings for &lt;code&gt;jasmine-rails&lt;/code&gt; and &lt;code&gt;jasmine-jquery-rails&lt;/code&gt;, without removing the two gems, you can add &lt;code&gt;gem jasmine&lt;/code&gt; and run &lt;code&gt;rake jasmine:install&lt;/code&gt;. Then either you run &lt;code&gt;rake jasmine&lt;/code&gt; and visit &lt;code&gt;localhost:8888&lt;/code&gt; or run &lt;code&gt;rake jasmine:ci&lt;/code&gt; to run the tests in the CLI, the tests will be run smoothly, regarding all the matchers from &lt;code&gt;jasmine-jquery&lt;/code&gt; and fixtures.&lt;/p&gt;
+&lt;p&gt;After poking around in the relavent files, I found that &lt;code&gt;gem jasmine&lt;/code&gt; load fixtures perfectly fine without the route hacking, no matter from a browser or CLI. But even in CLI from the message shown I think it relies on &lt;code&gt;jasmine-jquery-rails&lt;/code&gt; through asset pipeline by firing up a server.&lt;/p&gt;</content><category term="rails"></category></entry><entry><title>Rails ActionMailer: Explain Why Calling Class Methods That Do Not Exist on Mailers Works</title><link href="https://shawnsden.ga/articles/rails-actionmailer-explain-why-calling-class-methods-that-do-not-exist-on-mailers-works.html" rel="alternate"></link><published>2017-07-01T10:36:00+08:00</published><updated>2017-07-01T10:36:00+08:00</updated><author><name>Xiaohong Deng</name></author><id>tag:shawnsden.ga,2017-07-01:/articles/rails-actionmailer-explain-why-calling-class-methods-that-do-not-exist-on-mailers-works.html</id><summary type="html">&lt;!-- Summary: --&gt;
+
+&lt;p&gt;Here is &lt;a href="http://karolgalanciak.com/blog/2016/07/31/decoding-rails-magic-how-does-calling-class-methods-on-mailers-work"&gt;an article&lt;/a&gt; from Karol Galanciak you can refer to as a start. I'm gonna rewrite his article in a way that conveys pretty much the same information with addditional detail generated by me reading the Rails source code. Hopefully it would crystalize your understanding on the subject further …&lt;/p&gt;</summary><content type="html">&lt;!-- Summary: --&gt;
+
+&lt;p&gt;Here is &lt;a href="http://karolgalanciak.com/blog/2016/07/31/decoding-rails-magic-how-does-calling-class-methods-on-mailers-work"&gt;an article&lt;/a&gt; from Karol Galanciak you can refer to as a start. I'm gonna rewrite his article in a way that conveys pretty much the same information with addditional detail generated by me reading the Rails source code. Hopefully it would crystalize your understanding on the subject further. Most of the code snippets are snatched from Michael Hartl's Rails Tutorial&lt;/p&gt;
+&lt;p&gt;In a Rails app, you generate a Mailer by typing the following in the terminal&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;rails g mailer UserMailer account_activation&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Inside &lt;code&gt;user_mailer.rb&lt;/code&gt; you have&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;UserMailer&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;ApplicationMailer&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;account_activation&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="vi"&gt;@user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;
+    &lt;span class="n"&gt;mail&lt;/span&gt; &lt;span class="ss"&gt;to&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;subject&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Account activation&amp;quot;&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;After that you can send email to &lt;code&gt;user&lt;/code&gt; by&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;UserMailer.account_activation(user).deliver_now&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;You can preview the mail in &lt;code&gt;user_mailer_preview&lt;/code&gt; by the following&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;UserMailerPreview&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;ActionMailer&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Preview&lt;/span&gt;
+
+  &lt;span class="c1"&gt;# Preview this email at http://localhost:3000/rails/mailers/user_mailer/account_activation&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;account_activation&lt;/span&gt;
+    &lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;User&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;first&lt;/span&gt;
+    &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;activation_token&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;User&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new_token&lt;/span&gt;
+    &lt;span class="c1"&gt;# account_activation is an instance method&lt;/span&gt;
+    &lt;span class="c1"&gt;# of UserMailer. What&amp;#39;s going on?&lt;/span&gt;
+    &lt;span class="no"&gt;UserMailer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;account_activation&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You can create a &lt;code&gt;user_mailer_test.rb&lt;/code&gt; and do the following&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;require&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;test_helper&amp;#39;&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;UserMailerTest&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;ActionMailer&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;TestCase&lt;/span&gt;
+
+  &lt;span class="nb"&gt;test&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;account_activation&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+    &lt;span class="n"&gt;mail&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;UserMailer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;account_activation&lt;/span&gt;
+    &lt;span class="n"&gt;assert_equal&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Account activation&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mail&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;subject&lt;/span&gt;
+    &lt;span class="n"&gt;assert_equal&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;to@example.org&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mail&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to&lt;/span&gt;
+    &lt;span class="n"&gt;assert_equal&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;from@example.com&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mail&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;from&lt;/span&gt;
+    &lt;span class="n"&gt;assert_match&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Hi&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mail&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;body&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;encoded&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Why &lt;code&gt;account_activation&lt;/code&gt; Is Defined as An Instance Method But Called as A Class Method?&lt;/h2&gt;
+&lt;p&gt;You'd probably have guessed &lt;code&gt;method_missing&lt;/code&gt; is behind the curtain. That's correct. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Base&lt;/span&gt;
+  &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="nb"&gt;self&lt;/span&gt;
+  &lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;method_missing&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;method_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;action_methods&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;include?&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;method_name&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="no"&gt;MessageDelivery&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;method_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="k"&gt;else&lt;/span&gt;
+        &lt;span class="k"&gt;super&lt;/span&gt;
+      &lt;span class="k"&gt;end&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt;
+  &lt;span class="o"&gt;...&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Calling the instance method as a class method results in a &lt;code&gt;MessageDelivery&lt;/code&gt; object. &lt;code&gt;MessageDelivery&lt;/code&gt; is a subclass of &lt;code&gt;Delegator&lt;/code&gt;. It's a wrapper of the related object. In this case Mail::Message. You can retrieve the wrapped object by &lt;code&gt;md.message&lt;/code&gt; given &lt;code&gt;md&lt;/code&gt; is a &lt;code&gt;MessageDelivery&lt;/code&gt; object. The Mailer class, in this case &lt;code&gt;UserMailer&lt;/code&gt;, instance method &lt;code&gt;account_activation&lt;/code&gt; and arg &lt;code&gt;user&lt;/code&gt; are passed to the &lt;code&gt;MessageDelivery&lt;/code&gt; object.&lt;/p&gt;
+&lt;p&gt;Note that &lt;code&gt;action_methods&lt;/code&gt; is inherited from &lt;code&gt;AbstractController::Base&lt;/code&gt;. &lt;code&gt;method_missing&lt;/code&gt; here is defined in singleton class. The scope in singleton class is the class itself. So &lt;code&gt;method_missing&lt;/code&gt; handles class methods.&lt;/p&gt;
+&lt;p&gt;Returning a &lt;code&gt;MessageDelivery&lt;/code&gt; object doesn't quite answer the question, does it? What about instance method &lt;code&gt;account_activation&lt;/code&gt;? Does it get called somewhere?&lt;/p&gt;
+&lt;h2&gt;What Does &lt;code&gt;MessageDelivery#deliver_now&lt;/code&gt; Do&lt;/h2&gt;
+&lt;p&gt;First, we have&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;deliver_now&lt;/span&gt;
+  &lt;span class="n"&gt;processed_mailer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;handle_exceptions&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+    &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;deliver&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Note &lt;code&gt;message&lt;/code&gt; in the code is called on an instance of &lt;code&gt;MessageDelivery&lt;/code&gt;. Though internally it is a delegator of &lt;code&gt;processed_mailer&lt;/code&gt;. That is, &lt;code&gt;deliver&lt;/code&gt; is actually called on &lt;code&gt;processed_mailer.message&lt;/code&gt;. &lt;code&gt;message&lt;/code&gt; is an &lt;code&gt;attr_internal&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Let's look into &lt;code&gt;processed_mailer&lt;/code&gt; method&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;processed_mailer&lt;/span&gt;
+  &lt;span class="vi"&gt;@processed_mailer&lt;/span&gt; &lt;span class="o"&gt;||=&lt;/span&gt; &lt;span class="vi"&gt;@mailer_class&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tap&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;mailer&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+    &lt;span class="n"&gt;mailer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;process&lt;/span&gt; &lt;span class="vi"&gt;@action&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="vi"&gt;@args&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Here &lt;code&gt;@mailer_class&lt;/code&gt; is &lt;code&gt;UserMailer&lt;/code&gt; in our case. &lt;code&gt;tap&lt;/code&gt; is defiend in &lt;code&gt;Object&lt;/code&gt; as follows&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Object&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;tap&lt;/span&gt;
+    &lt;span class="k"&gt;yield&lt;/span&gt; &lt;span class="nb"&gt;self&lt;/span&gt;
+    &lt;span class="nb"&gt;self&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;So &lt;code&gt;processed_mailer&lt;/code&gt; is equivalent to&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;mailer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="vi"&gt;@mailer_class&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;
+&lt;span class="n"&gt;mailer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;process&lt;/span&gt; &lt;span class="vi"&gt;@action&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;
+&lt;span class="vi"&gt;@processed_mailer&lt;/span&gt; &lt;span class="o"&gt;||=&lt;/span&gt; &lt;span class="n"&gt;mailer&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I won't dig into &lt;code&gt;process&lt;/code&gt; deeper because it is quite involved. I assume process executes the instance method on the &lt;code&gt;UserMailer&lt;/code&gt; object. Almost all instance methods of &lt;code&gt;MessageDelivery&lt;/code&gt; call &lt;code&gt;processed_mailer&lt;/code&gt; internally. That more or less answers the question that if &lt;code&gt;account_activation&lt;/code&gt; gets called somewhere?&lt;/p&gt;
+&lt;h2&gt;Why Preview Can Show Mail Content by Returning a &lt;code&gt;MessageDelivery&lt;/code&gt; Object&lt;/h2&gt;
+&lt;p&gt;I can only guess that by visiting the URL specified above the method, some instance methods get triggered on the returned &lt;code&gt;MessageDelivery&lt;/code&gt; object.&lt;/p&gt;
+&lt;h2&gt;Why Methods &lt;code&gt;to&lt;/code&gt;, &lt;code&gt;from&lt;/code&gt; and &lt;code&gt;subject&lt;/code&gt; Can Be Called on &lt;code&gt;MessageDelivery&lt;/code&gt; Object&lt;/h2&gt;
+&lt;p&gt;You guessed it again, &lt;code&gt;method_missing&lt;/code&gt;! This time it's the &lt;code&gt;method_missing&lt;/code&gt; inherited from &lt;code&gt;Delegator&lt;/code&gt;. It calls &lt;code&gt;__getobj__&lt;/code&gt; which calls &lt;code&gt;message&lt;/code&gt; on &lt;code&gt;MessageDelivery&lt;/code&gt; object and returns the wrapped object, &lt;code&gt;Mail::Message&lt;/code&gt;. It has methods &lt;code&gt;to&lt;/code&gt;, &lt;code&gt;from&lt;/code&gt; and &lt;code&gt;subject&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;Wrap Up&lt;/h2&gt;
+&lt;p&gt;That's it. That is our little tour of visiting some Mailer related Rails source code. Hope that resolves your confusion to some extent.&lt;/p&gt;</content><category term="rails"></category></entry></feed>

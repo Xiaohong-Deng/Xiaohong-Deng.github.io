@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shawn's Den, Computing, Programming and Data">
+
+        <link rel="alternate"  href="https://shawnsden.ga/feeds/all.atom.xml" type="application/atom+xml" title="Shawn's Den Full Atom Feed"/>
+
+        <title>Jasmine Setup in UCB CS169x and SaaS Book // Shawn's Den // Computing, Programming and Data</title>
+
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.3.0/pure-min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://shawnsden.ga/theme/css/pure.css">
+    <link rel="stylesheet" href="https://shawnsden.ga/theme/css/pygments.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fitvids/1.0.1/jquery.fitvids.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $(".content").fitVids();
+        });
+    </script>
+</head>
+
+<body>
+<div class="pure-g-r" id="layout">
+    <div class="sidebar sidebar-article pure-u">
+        <header class="header-article">
+            <hgroup>
+                <a href="https://shawnsden.ga/author/xiaohong-deng.html" title="See posts by Xiaohong Deng">
+                        <img class="avatar" alt="Xiaohong Deng" src="https://www.gravatar.com/avatar/db05d7ab1c2addcd23f526774e8f6a1d">
+                </a>
+                <h2 class="article-info">Xiaohong Deng</h2>
+                <small class="about-author"></small>
+                <h5>Published</h5>
+                <p>三 16 八月 2017</p>
+                <a href="/">&larr;Home</a>
+            </hgroup>
+        </header>
+    </div>
+    <div class="pure-u">
+        <div class="content">
+            <section class="post">
+                <header class="post-header">
+                    <h1>Jasmine Setup in UCB CS169x and SaaS Book</h1>
+                        <p class="post-meta">
+                            // under                                 <a class="post-category" href="https://shawnsden.ga/tag/rails.html">rails</a>
+                        </p>
+                </header>
+            </section>
+            <p>You can use either <code>gem jasmine</code> or <code>gem jasmine-rails</code> to set up Jasmine framework in your rails apps. In the SaaS book, it uses the latter. <code>gem jasmine-jquery-rails</code> is one way to exploit the extra matchers and fixtures loading feature from <code>jasmine-jquery</code>. It needs jquery as a prerequisite.</p>
+<p>You won't be able to run jasmine tests in the browser smoothly by just following the SaaS book $6.7. At least not by Aug. 2017.</p>
+<p>First make sure you installed <code>gem jasmine-rails</code> and <code>gem jasmine-jquery-rails</code>. After <code>rails g jasmine_rails:install</code>, add <code>//= require jasmine-jquery</code> to <code>application.js</code>. Alternatively, <code>jasmine-jquery-rails</code> can be included by adding <code>src_file: - assets/jasmine-jquery.js</code> to <code>jasmine.yml</code>. This would load matchers from <code>jasmine-jquery</code>. Both <code>gem jasmine-rails</code> and <code>gem jasmine</code> depend on it. The default fixtures loading path is <code>spec/javascripts/fixtures</code> but testing in the browser is not able to load fixtures. The workaround can be found at <a href="https://github.com/travisjeffery/jasmine-jquery-rails/issues/4">this jasmine-jquery-rails issue</a></p>
+<p>You need to create a <code>config/initializers/jasmine_fixtures.rb</code> and fill it with</p>
+<div class="highlight"><pre><span></span><span class="c1"># Map fixtures directory for Jasmine suite</span>
+<span class="k">if</span> <span class="n">defined?</span><span class="p">(</span><span class="no">Jasmine</span><span class="o">::</span><span class="no">Jquery</span><span class="o">::</span><span class="no">Rails</span><span class="o">::</span><span class="no">Engine</span><span class="p">)</span>
+  <span class="no">JasmineFixtureServer</span> <span class="o">=</span> <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">env</span><span class="o">|</span>
+    <span class="no">Rack</span><span class="o">::</span><span class="no">Directory</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;spec/javascripts/fixtures&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+
+
+<p>Then open <code>routes.rb</code> and add</p>
+<div class="highlight"><pre><span></span>  <span class="c1"># mount spec/javascripts/fixtures directory</span>
+  <span class="n">mount</span> <span class="no">JasmineFixtureServer</span> <span class="o">=&gt;</span> <span class="s1">&#39;/spec/javascripts/fixtures&#39;</span> <span class="k">if</span> <span class="n">defined?</span><span class="p">(</span><span class="no">Jasmine</span><span class="o">::</span><span class="no">Jquery</span><span class="o">::</span><span class="no">Rails</span><span class="o">::</span><span class="no">Engine</span><span class="p">)</span>
+</pre></div>
+
+
+<p>On <a href="https://github.com/travisjeffery/jasmine-jquery-rails">jasmine-jquery-rails github page</a> it implies that it takes effect through asset pipeline. That explains why the above settings are effective in browser but when you run <code>rake spec:javascript</code> in CLI it fails.</p>
+<p><code>jasmine-rails</code> doesn't support fixtures. It recommend <a href="https://github.com/searls/jasmine-fixture">jasmine-fixture</a>. It provides syntax for loading fixtures that is different from <code>jasmine-jquery</code>. So in order to use it you need to rewrite part of your tests first. So much for loading fixtures while testing in CLI using <code>jasmine-rails</code>.</p>
+<p>After you did all the settings for <code>jasmine-rails</code> and <code>jasmine-jquery-rails</code>, without removing the two gems, you can add <code>gem jasmine</code> and run <code>rake jasmine:install</code>. Then either you run <code>rake jasmine</code> and visit <code>localhost:8888</code> or run <code>rake jasmine:ci</code> to run the tests in the CLI, the tests will be run smoothly, regarding all the matchers from <code>jasmine-jquery</code> and fixtures.</p>
+<p>After poking around in the relavent files, I found that <code>gem jasmine</code> load fixtures perfectly fine without the route hacking, no matter from a browser or CLI. But even in CLI from the message shown I think it relies on <code>jasmine-jquery-rails</code> through asset pipeline by firing up a server.</p>
+            <div class="hr"></div>
+            <a href="#" class="go-top">Go Top</a>
+<div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = "shawnsden"; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div><footer class="footer">
+    <p>&copy; Shawn's Den &ndash;
+        Built with <a href="https://github.com/PurePelicanTheme/pure">Pure Theme</a>
+        for <a href="http://blog.getpelican.com/">Pelican</a>
+    </p>
+</footer>        </div>
+    </div>
+</div>
+    <script>
+        var $top = $('.go-top');
+
+        // Show or hide the sticky footer button
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 200) {
+                $top.fadeIn(200);
+            } else {
+                $top.fadeOut(200);
+            }
+        });
+
+        // Animate the scroll to top
+        $top.click(function(event) {
+            event.preventDefault();
+            $('html, body').animate({scrollTop: 0}, 300);
+        })
+
+        // Makes sure that the href="#" attached to the <a> elements
+        // don't scroll you back up the page.
+        $('body').on('click', 'a[href="#"]', function(event) {
+            event.preventDefault();
+        });
+    </script>
+</body>
+</html>

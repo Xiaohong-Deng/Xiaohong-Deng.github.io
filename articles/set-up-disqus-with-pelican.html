@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shawn's Den, Computing, Programming and Data">
+
+        <link rel="alternate"  href="https://shawnsden.ga/feeds/all.atom.xml" type="application/atom+xml" title="Shawn's Den Full Atom Feed"/>
+
+        <title>Set Up Disqus With Pelican // Shawn's Den // Computing, Programming and Data</title>
+
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.3.0/pure-min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://shawnsden.ga/theme/css/pure.css">
+    <link rel="stylesheet" href="https://shawnsden.ga/theme/css/pygments.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fitvids/1.0.1/jquery.fitvids.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $(".content").fitVids();
+        });
+    </script>
+</head>
+
+<body>
+<div class="pure-g-r" id="layout">
+    <div class="sidebar sidebar-article pure-u">
+        <header class="header-article">
+            <hgroup>
+                <a href="https://shawnsden.ga/author/xiaohong-deng.html" title="See posts by Xiaohong Deng">
+                        <img class="avatar" alt="Xiaohong Deng" src="https://www.gravatar.com/avatar/db05d7ab1c2addcd23f526774e8f6a1d">
+                </a>
+                <h2 class="article-info">Xiaohong Deng</h2>
+                <small class="about-author">I am super awesome</small>
+                <h5>Published</h5>
+                <p>二 04 七月 2017</p>
+                <a href="/">&larr;Home</a>
+            </hgroup>
+        </header>
+    </div>
+    <div class="pure-u">
+        <div class="content">
+            <section class="post">
+                <header class="post-header">
+                    <h1>Set Up Disqus With Pelican</h1>
+                        <p class="post-meta">
+                            // under                                 <a class="post-category" href="https://shawnsden.ga/tag/pelican.html">pelican</a>
+                        </p>
+                </header>
+            </section>
+            <p>There are a few variables in <code>pelicanconf.py</code> involved in this problem, there are a few that break your app in other ways. I'm gonna concentrate on those directly involved and traps you might get caught up with.</p>
+<ul>
+<li><strong>This Disqus comment feature can not be previewed locally</strong>, I will explain it later.</li>
+<li>Just in case, set <code>RELATIVE_URLS</code> to <code>True</code> in <code>pelicanconf.py</code> and to <code>False</code> in <code>publishconf.py</code>. Set <code>SITEURL</code> to your domain name in the form of <code>http://domainame.me</code> in <code>publishconf.py</code>. Generate your site using <code>publishconf.py</code> if you want to view it remotely.</li>
+<li>Set <code>DISQUS_SITENAME</code> = &lt;YOUR_DOMAIN>. It can be any string you like.</li>
+</ul>
+<h3>Registration at Disqus</h3>
+<ul>
+<li>Follow <a href="https://github.com/getpelican/pelican-plugins/tree/master/disqus_static">disqus_static plugin installation</a>, the html text under <strong>usage</strong> is not relevant in most of the themes. Of course I can't test them all. When register the application at Disqus, there are many blanks you need to fill in. Fill in &lt;YOUR_DOMAIN> when possible, in case some blank is used to match DISQUS_SITENAME.</li>
+<li>Do not move <code>disqus_static.py</code> to <code>plugin</code> folder in <code>pelican</code> installation directory. Instead, specify the <code>PLUGIN_PATHS</code> as <a href="http://docs.getpelican.com/en/stable/plugins.html">pelican docs</a> suggests.</li>
+<li>There is another registration process you need to go through. I don't remember where is the entrance, but the first step is for you to choose whether you want to comment as a user or install Disqus comment feature to your site. After the registration <code>&lt;YOUR_DOMAIN&gt;.disqus.com/admin/settings</code> should be accessible. Click <code>site -&gt; advanced</code> on the left. Add <code>SITEURL</code> to <strong>Trusted Domains</strong>. <code>localhost</code> or <code>127.0.0.1</code> can't be added. That's why this feature can't be previewed locally.</li>
+<li>At some step of the above registration process, you will be asked for the blogging system you tend to apply Disqus to. Pelican is not on the list and you will be directed to some universal embedded code. Pelican doesn't need those code to work with Disqus. You can safely ignore it.</li>
+</ul>
+<h3>If Things Mesh</h3>
+<ul>
+<li>If you set <code>DISQUS_SITENAME</code> and it matches the corresponding setting on Disqus.com, for some themes like <code>pelican-clean-blog</code> <code>comment</code> hyperlinks should be visible under each article on the index page. This part is independent of the next part.</li>
+<li>When the comment section is not loaded on an article page, for some themes it's hard to tell if your plugin is not loaded correctly or it's communication failure between your site and Disqus. Those themes fail silently. Some other themes will show error message "We were unable to load Disqus" and give a <a href="https://help.disqus.com/customer/portal/articles/472007-i-m-receiving-the-message-%22we-were-unable-to-load-disqus-%22">trouble shooting link</a>. That means the plugin is loaded correctly. For themes that fail silently you can comment out <code>PLUGIN_PATHS</code> and <code>PLUGINS</code> to see if things are different in any ways. Themes like <strong>Flex</strong> are integrated with Disqus plugin so that's trouble saving.</li>
+</ul>
+            <div class="hr"></div>
+            <a href="#" class="go-top">Go Top</a>
+<div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = "shawnsden"; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div><footer class="footer">
+    <p>&copy; Shawn's Den &ndash;
+        Built with <a href="https://github.com/PurePelicanTheme/pure">Pure Theme</a>
+        for <a href="http://blog.getpelican.com/">Pelican</a>
+    </p>
+</footer>        </div>
+    </div>
+</div>
+    <script>
+        var $top = $('.go-top');
+
+        // Show or hide the sticky footer button
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 200) {
+                $top.fadeIn(200);
+            } else {
+                $top.fadeOut(200);
+            }
+        });
+
+        // Animate the scroll to top
+        $top.click(function(event) {
+            event.preventDefault();
+            $('html, body').animate({scrollTop: 0}, 300);
+        })
+
+        // Makes sure that the href="#" attached to the <a> elements
+        // don't scroll you back up the page.
+        $('body').on('click', 'a[href="#"]', function(event) {
+            event.preventDefault();
+        });
+    </script>
+</body>
+</html>
