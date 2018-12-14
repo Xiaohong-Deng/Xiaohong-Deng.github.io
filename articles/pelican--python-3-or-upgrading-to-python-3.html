@@ -61,6 +61,7 @@
 <h3>Automation</h3>
 <p>After installing Pelican, you should run <code>pelican-quickstart</code> to get a updated <code>Makefile</code> and <code>tasks.py</code>. The latter should be used to replace <code>fabfile.py</code> if you have a Pelican working directory created with Python 2.</p>
 <p><code>fabric</code> API was reorganized since v2.0. <code>invoke</code> is more like Fabric2. So command line automation works differently now. To call functions defined in <code>tasks.py</code> you have to prepend <code>@task</code> to each function and add a parameter which will be set to a <code>Context</code> by the decorator. Check out the following code snippet to get a hang of it.</p>
+<p>Note: When calling a function in command line you must replace underscores with hyphens.</p>
 <div class="highlight"><pre><span></span><span class="c1"># in command line use `invoke make-entry -p port_string` or `invoke make-entry` to go with default value</span>
 <span class="nd">@task</span>
 <span class="k">def</span> <span class="nf">livebuild</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">):</span>
