@@ -1,5 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Shawn's Den - articles</title><link href="https://shawnsden.ga/" rel="alternate"></link><link href="https://shawnsden.ga/feeds/articles.atom.xml" rel="self"></link><id>https://shawnsden.ga/</id><updated>2017-07-04T20:57:00+08:00</updated><subtitle>Computing, Programming and Data</subtitle><entry><title>Set Up Disqus With Pelican</title><link href="https://shawnsden.ga/articles/set-up-disqus-with-pelican.html" rel="alternate"></link><published>2017-07-04T20:57:00+08:00</published><updated>2017-07-04T20:57:00+08:00</updated><author><name>Xiaohong Deng</name></author><id>tag:shawnsden.ga,2017-07-04:/articles/set-up-disqus-with-pelican.html</id><summary type="html">&lt;p&gt;There are a few variables in &lt;code&gt;pelicanconf.py&lt;/code&gt; involved in this problem, there are a few that break your app in other ways. I'm gonna concentrate on those directly involved and traps you might get caught up with.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Shawn's Den - articles</title><link href="https://shawnsden.ga/" rel="alternate"></link><link href="https://shawnsden.ga/feeds/articles.atom.xml" rel="self"></link><id>https://shawnsden.ga/</id><updated>2018-12-14T15:44:00+08:00</updated><subtitle>Computing, Programming and Data</subtitle><entry><title>Pelican: Python 3 or Upgrading to Python 3</title><link href="https://shawnsden.ga/articles/pelican--python-3-or-upgrading-to-python-3.html" rel="alternate"></link><published>2018-12-14T15:44:00+08:00</published><updated>2018-12-14T15:44:00+08:00</updated><author><name>Xiaohong Deng</name></author><id>tag:shawnsden.ga,2018-12-14:/articles/pelican--python-3-or-upgrading-to-python-3.html</id><summary type="html">&lt;p&gt;&lt;a href="http://nafiulis.me/making-a-static-blog-with-pelican.html#getting-started"&gt;Making a Static Blog with Pelican&lt;/a&gt; is a great tutorial for beginners to start with Pelican. It was in Python 2 because back then &lt;code&gt;fabric&lt;/code&gt; is incompatible with Python 3. Now Pelican has moved to &lt;code&gt;invoke&lt;/code&gt; by default which is very similar to &lt;code&gt;fabric&lt;/code&gt; which supports Python 3 now. Both …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;a href="http://nafiulis.me/making-a-static-blog-with-pelican.html#getting-started"&gt;Making a Static Blog with Pelican&lt;/a&gt; is a great tutorial for beginners to start with Pelican. It was in Python 2 because back then &lt;code&gt;fabric&lt;/code&gt; is incompatible with Python 3. Now Pelican has moved to &lt;code&gt;invoke&lt;/code&gt; by default which is very similar to &lt;code&gt;fabric&lt;/code&gt; which supports Python 3 now. Both &lt;code&gt;invoke&lt;/code&gt; and &lt;code&gt;fabric&lt;/code&gt; are authored by the same person. It's time to use Pelican with Python 3 and enjoy the automation from &lt;code&gt;invoke&lt;/code&gt;.&lt;/p&gt;
+&lt;h3&gt;Getting Started&lt;/h3&gt;
+&lt;p&gt;You can either install all the dependencies in a virtual environment or not. For me, I chose to install Pelican in a conda env.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda create -n pelican &lt;span class="nv"&gt;python&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;.6
+&lt;span class="nb"&gt;source&lt;/span&gt; activate pelican
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Automation&lt;/h3&gt;
+&lt;p&gt;After installing Pelican, you should run &lt;code&gt;pelican-quickstart&lt;/code&gt; to get a updated &lt;code&gt;Makefile&lt;/code&gt; and &lt;code&gt;tasks.py&lt;/code&gt;. The latter should be used to replace &lt;code&gt;fabfile.py&lt;/code&gt; if you have a Pelican working directory created with Python 2.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;fabric&lt;/code&gt; API was reorganized since v2.0. &lt;code&gt;invoke&lt;/code&gt; is more like Fabric2. So command line automation works differently now. To call functions defined in &lt;code&gt;tasks.py&lt;/code&gt; you have to prepend &lt;code&gt;@task&lt;/code&gt; to each function and add a parameter which will be set to a &lt;code&gt;Context&lt;/code&gt; by the decorator. Check out the following code snippet to get a hang of it.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# in command line use `invoke make-entry -p port_string` or `invoke make-entry` to go with default value&lt;/span&gt;
+&lt;span class="nd"&gt;@task&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;livebuild&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;port&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;8080&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;make clean&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# 1&lt;/span&gt;
+    &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;make html&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# 2&lt;/span&gt;
+    &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;chdir&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;output&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# 3&lt;/span&gt;
+    &lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;livereload&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Server&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;  &lt;span class="c1"&gt;# 4&lt;/span&gt;
+    &lt;span class="n"&gt;server&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;watch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;../content/articles/*.md&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;  &lt;span class="c1"&gt;# 5&lt;/span&gt;
+        &lt;span class="n"&gt;livereload&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shell&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;pelican -s ../pelicanconf.py -o ../output&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;  &lt;span class="c1"&gt;# 6&lt;/span&gt;
+    &lt;span class="n"&gt;server&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;watch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;../content/pages/*.md&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;livereload&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shell&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;pelican -s ../pelicanconf.py -o ../output&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="n"&gt;server&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;watch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;../pure/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;  &lt;span class="c1"&gt;# 7&lt;/span&gt;
+        &lt;span class="n"&gt;livereload&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shell&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;pelican -s ../pelicanconf.py -o ../output&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;  &lt;span class="c1"&gt;# 8&lt;/span&gt;
+    &lt;span class="n"&gt;server&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;watch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;../pelicanconf.py&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;livereload&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shell&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;pelican -s ../pelicanconf.py -o ../output&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="n"&gt;server&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;watch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;*.html&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# 9&lt;/span&gt;
+    &lt;span class="n"&gt;server&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;watch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;*.css&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# 10&lt;/span&gt;
+    &lt;span class="n"&gt;server&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;serve&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;liveport&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;35729&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;port&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;port&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# 11&lt;/span&gt;
+
+
+&lt;span class="nd"&gt;@task&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;enter_dns_file&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;  &lt;span class="c1"&gt;# 1&lt;/span&gt;
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;output/CNAME&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;w&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;some_custom_domain&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="c1"&gt;# in command line use `invoke make-entry -p` to go with True or `invoke make-entry` to go with default value False&lt;/span&gt;
+&lt;span class="nd"&gt;@task&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;github&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;publish_drafts&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;  &lt;span class="c1"&gt;# 2&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;publish_drafts&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# 3&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;output/drafts&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;publish_drafts&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;rm -rf output/drafts&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;except&lt;/span&gt; &lt;span class="ne"&gt;Exception&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;pass&lt;/span&gt;
+
+    &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;ghp-import output&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# 4&lt;/span&gt;
+    &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;git push&amp;#39;&lt;/span&gt;
+          &lt;span class="s1"&gt;&amp;#39; your_github_personal_project_domain&amp;#39;&lt;/span&gt;
+          &lt;span class="s1"&gt;&amp;#39; gh-pages:master&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# 5&lt;/span&gt;
+    &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;rm -rf output&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# 6&lt;/span&gt;
+
+
+&lt;span class="nd"&gt;@task&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;one_click&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;preview&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;enter_dns_file&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;github&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If you want to call any function in command line as tasks, you must set the first
+parameter, this will be initialized to a &lt;code&gt;Context&lt;/code&gt; by &lt;code&gt;task()&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;For functions like &lt;code&gt;github()&lt;/code&gt; which has a default boolean valued parameter, if you want to call
+it in command line you can explicitly specify a flag &lt;code&gt;-p&lt;/code&gt; to set it to true, or omit it
+to set it to the default value which is false&lt;/p&gt;
+&lt;p&gt;if you don't need any parameters you still must set a parameter which is set to a Context by task
+by default, then you can call them in command line. Otherwise you get an error
+As you can see if you want to call them in other functions you must explicitly pass a Context to them&lt;/p&gt;
+&lt;p&gt;If you remove c for &lt;code&gt;github()&lt;/code&gt; it will still work but &lt;code&gt;publish_drafts&lt;/code&gt; will be set to a &lt;code&gt;Context&lt;/code&gt;, being called
+as a command line task or within another function&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Context&lt;/code&gt; can serve as a &lt;code&gt;connection&lt;/code&gt; such that you can call shell commands on it. Or directly call shell commands
+using invoke.run. Either way you must define a &lt;code&gt;Context&lt;/code&gt; parameter for most functions, which is annoying.&lt;/p&gt;
+&lt;hr&gt;</content></entry><entry><title>Set Up Disqus With Pelican</title><link href="https://shawnsden.ga/articles/set-up-disqus-with-pelican.html" rel="alternate"></link><published>2017-07-04T20:57:00+08:00</published><updated>2017-07-04T20:57:00+08:00</updated><author><name>Xiaohong Deng</name></author><id>tag:shawnsden.ga,2017-07-04:/articles/set-up-disqus-with-pelican.html</id><summary type="html">&lt;p&gt;There are a few variables in &lt;code&gt;pelicanconf.py&lt;/code&gt; involved in this problem, there are a few that break your app in other ways. I'm gonna concentrate on those directly involved and traps you might get caught up with.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;This Disqus comment feature can not be previewed locally&lt;/strong&gt;, I will explain …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;There are a few variables in &lt;code&gt;pelicanconf.py&lt;/code&gt; involved in this problem, there are a few that break your app in other ways. I'm gonna concentrate on those directly involved and traps you might get caught up with.&lt;/p&gt;
 &lt;ul&gt;

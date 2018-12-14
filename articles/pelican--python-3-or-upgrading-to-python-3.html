@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shawn's Den, Computing, Programming and Data">
+
+        <link rel="alternate"  href="https://shawnsden.ga/feeds/all.atom.xml" type="application/atom+xml" title="Shawn's Den Full Atom Feed"/>
+
+        <title>Pelican: Python 3 or Upgrading to Python 3 // Shawn's Den // Computing, Programming and Data</title>
+
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.3.0/pure-min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://shawnsden.ga/theme/css/pure.css">
+    <link rel="stylesheet" href="https://shawnsden.ga/theme/css/pygments.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fitvids/1.0.1/jquery.fitvids.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $(".content").fitVids();
+        });
+    </script>
+</head>
+
+<body>
+<div class="pure-g-r" id="layout">
+    <div class="sidebar sidebar-article pure-u">
+        <header class="header-article">
+            <hgroup>
+                <a href="https://shawnsden.ga/author/xiaohong-deng.html" title="See posts by Xiaohong Deng">
+                        <img class="avatar" alt="Xiaohong Deng" src="https://www.gravatar.com/avatar/db05d7ab1c2addcd23f526774e8f6a1d">
+                </a>
+                <h2 class="article-info">Xiaohong Deng</h2>
+                <small class="about-author"></small>
+                <h5>Published</h5>
+                <p>五 14 十二月 2018</p>
+                <a href="/">&larr;Home</a>
+            </hgroup>
+        </header>
+    </div>
+    <div class="pure-u">
+        <div class="content">
+            <section class="post">
+                <header class="post-header">
+                    <h1>Pelican: Python 3 or Upgrading to Python 3</h1>
+                        <p class="post-meta">
+                            // under                         </p>
+                </header>
+            </section>
+            <p><a href="http://nafiulis.me/making-a-static-blog-with-pelican.html#getting-started">Making a Static Blog with Pelican</a> is a great tutorial for beginners to start with Pelican. It was in Python 2 because back then <code>fabric</code> is incompatible with Python 3. Now Pelican has moved to <code>invoke</code> by default which is very similar to <code>fabric</code> which supports Python 3 now. Both <code>invoke</code> and <code>fabric</code> are authored by the same person. It's time to use Pelican with Python 3 and enjoy the automation from <code>invoke</code>.</p>
+<h3>Getting Started</h3>
+<p>You can either install all the dependencies in a virtual environment or not. For me, I chose to install Pelican in a conda env.</p>
+<div class="highlight"><pre><span></span>conda create -n pelican <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.6
+<span class="nb">source</span> activate pelican
+</pre></div>
+
+
+<h3>Automation</h3>
+<p>After installing Pelican, you should run <code>pelican-quickstart</code> to get a updated <code>Makefile</code> and <code>tasks.py</code>. The latter should be used to replace <code>fabfile.py</code> if you have a Pelican working directory created with Python 2.</p>
+<p><code>fabric</code> API was reorganized since v2.0. <code>invoke</code> is more like Fabric2. So command line automation works differently now. To call functions defined in <code>tasks.py</code> you have to prepend <code>@task</code> to each function and add a parameter which will be set to a <code>Context</code> by the decorator. Check out the following code snippet to get a hang of it.</p>
+<div class="highlight"><pre><span></span><span class="c1"># in command line use `invoke make-entry -p port_string` or `invoke make-entry` to go with default value</span>
+<span class="nd">@task</span>
+<span class="k">def</span> <span class="nf">livebuild</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">):</span>
+    <span class="n">run</span><span class="p">(</span><span class="s1">&#39;make clean&#39;</span><span class="p">)</span>  <span class="c1"># 1</span>
+    <span class="n">run</span><span class="p">(</span><span class="s1">&#39;make html&#39;</span><span class="p">)</span>  <span class="c1"># 2</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">)</span>  <span class="c1"># 3</span>
+    <span class="n">server</span> <span class="o">=</span> <span class="n">livereload</span><span class="o">.</span><span class="n">Server</span><span class="p">()</span>  <span class="c1"># 4</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="s1">&#39;../content/articles/*.md&#39;</span><span class="p">,</span>  <span class="c1"># 5</span>
+        <span class="n">livereload</span><span class="o">.</span><span class="n">shell</span><span class="p">(</span><span class="s1">&#39;pelican -s ../pelicanconf.py -o ../output&#39;</span><span class="p">))</span>  <span class="c1"># 6</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="s1">&#39;../content/pages/*.md&#39;</span><span class="p">,</span>
+        <span class="n">livereload</span><span class="o">.</span><span class="n">shell</span><span class="p">(</span><span class="s1">&#39;pelican -s ../pelicanconf.py -o ../output&#39;</span><span class="p">))</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="s1">&#39;../pure/&#39;</span><span class="p">,</span>  <span class="c1"># 7</span>
+        <span class="n">livereload</span><span class="o">.</span><span class="n">shell</span><span class="p">(</span><span class="s1">&#39;pelican -s ../pelicanconf.py -o ../output&#39;</span><span class="p">))</span>  <span class="c1"># 8</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="s1">&#39;../pelicanconf.py&#39;</span><span class="p">,</span>
+        <span class="n">livereload</span><span class="o">.</span><span class="n">shell</span><span class="p">(</span><span class="s1">&#39;pelican -s ../pelicanconf.py -o ../output&#39;</span><span class="p">))</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="s1">&#39;*.html&#39;</span><span class="p">)</span>  <span class="c1"># 9</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="s1">&#39;*.css&#39;</span><span class="p">)</span>  <span class="c1"># 10</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">serve</span><span class="p">(</span><span class="n">liveport</span><span class="o">=</span><span class="mi">35729</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span>  <span class="c1"># 11</span>
+
+
+<span class="nd">@task</span>
+<span class="k">def</span> <span class="nf">enter_dns_file</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>  <span class="c1"># 1</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;output/CNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;some_custom_domain&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># in command line use `invoke make-entry -p` to go with True or `invoke make-entry` to go with default value False</span>
+<span class="nd">@task</span>
+<span class="k">def</span> <span class="nf">github</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">publish_drafts</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>  <span class="c1"># 2</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">publish_drafts</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>  <span class="c1"># 3</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;output/drafts&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">publish_drafts</span><span class="p">:</span>
+                <span class="n">run</span><span class="p">(</span><span class="s1">&#39;rm -rf output/drafts&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="n">run</span><span class="p">(</span><span class="s1">&#39;ghp-import output&#39;</span><span class="p">)</span>  <span class="c1"># 4</span>
+    <span class="n">run</span><span class="p">(</span><span class="s1">&#39;git push&#39;</span>
+          <span class="s1">&#39; your_github_personal_project_domain&#39;</span>
+          <span class="s1">&#39; gh-pages:master&#39;</span><span class="p">)</span>  <span class="c1"># 5</span>
+    <span class="n">run</span><span class="p">(</span><span class="s1">&#39;rm -rf output&#39;</span><span class="p">)</span>  <span class="c1"># 6</span>
+
+
+<span class="nd">@task</span>
+<span class="k">def</span> <span class="nf">one_click</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="n">preview</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="n">enter_dns_file</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="n">github</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</pre></div>
+
+
+<p>If you want to call any function in command line as tasks, you must set the first
+parameter, this will be initialized to a <code>Context</code> by <code>task()</code></p>
+<p>For functions like <code>github()</code> which has a default boolean valued parameter, if you want to call
+it in command line you can explicitly specify a flag <code>-p</code> to set it to true, or omit it
+to set it to the default value which is false</p>
+<p>if you don't need any parameters you still must set a parameter which is set to a Context by task
+by default, then you can call them in command line. Otherwise you get an error
+As you can see if you want to call them in other functions you must explicitly pass a Context to them</p>
+<p>If you remove c for <code>github()</code> it will still work but <code>publish_drafts</code> will be set to a <code>Context</code>, being called
+as a command line task or within another function</p>
+<p><code>Context</code> can serve as a <code>connection</code> such that you can call shell commands on it. Or directly call shell commands
+using invoke.run. Either way you must define a <code>Context</code> parameter for most functions, which is annoying.</p>
+<hr>
+            <div class="hr"></div>
+            <a href="#" class="go-top">Go Top</a>
+<div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = "shawnsden"; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div><footer class="footer">
+    <p>&copy; Shawn's Den &ndash;
+        Built with <a href="https://github.com/PurePelicanTheme/pure">Pure Theme</a>
+        for <a href="http://blog.getpelican.com/">Pelican</a>
+    </p>
+</footer>        </div>
+    </div>
+</div>
+    <script>
+        var $top = $('.go-top');
+
+        // Show or hide the sticky footer button
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 200) {
+                $top.fadeIn(200);
+            } else {
+                $top.fadeOut(200);
+            }
+        });
+
+        // Animate the scroll to top
+        $top.click(function(event) {
+            event.preventDefault();
+            $('html, body').animate({scrollTop: 0}, 300);
+        })
+
+        // Makes sure that the href="#" attached to the <a> elements
+        // don't scroll you back up the page.
+        $('body').on('click', 'a[href="#"]', function(event) {
+            event.preventDefault();
+        });
+    </script>
+</body>
+</html>
