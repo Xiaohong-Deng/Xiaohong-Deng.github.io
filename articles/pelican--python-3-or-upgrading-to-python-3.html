@@ -60,7 +60,7 @@
 
 <h3>Automation</h3>
 <p>After installing Pelican, you should run <code>pelican-quickstart</code> to get a updated <code>Makefile</code> and <code>tasks.py</code>. The latter should be used to replace <code>fabfile.py</code> if you have a Pelican working directory created with Python 2.</p>
-<p><code>fabric</code> API was reorganized since v2.0. <code>invoke</code> is more like Fabric2. So command line automation works differently now. To call functions defined in <code>tasks.py</code> you have to prepend <code>@task</code> to each function and add a parameter which will be set to a <code>Context</code> by the decorator. Check out the following code snippet to get a hang of it.</p>
+<p><code>fabric</code> API was reorganized since v2.0. <code>invoke</code> is more like Fabric2. So command line automation works differently now. To call functions defined in <code>tasks.py</code> you have to prepend <code>@task</code> to each function meant to be called in command line and add a parameter which will be set to a <code>Context</code> by the decorator. Check out the following code snippet to get a hang of it.</p>
 <p>Note: When calling a function in command line you must replace underscores with hyphens.</p>
 <div class="highlight"><pre><span></span><span class="c1"># in command line use `invoke make-entry -p port_string` or `invoke make-entry` to go with default value</span>
 <span class="nd">@task</span>
@@ -126,6 +126,8 @@ As you can see if you want to call them in other functions you must explicitly p
 as a command line task or within another function</p>
 <p><code>Context</code> can serve as a <code>connection</code> such that you can call shell commands on it. Or directly call shell commands
 using invoke.run. Either way you must define a <code>Context</code> parameter for most functions, which is annoying.</p>
+<h3>Wrap Up</h3>
+<p>That's pretty much all you need to know about Pelican in Python 3. Enjoy the ride with Pelican.</p>
 <hr>
             <div class="hr"></div>
             <a href="#" class="go-top">Go Top</a>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shawn's Den, Curiosity and Audacity">
+
+        <link rel="alternate"  href="https://shawnsden.ga/feeds/all.atom.xml" type="application/atom+xml" title="Shawn's Den Full Atom Feed"/>
+
+        <title>Add a Project Page to Your Personal Page // Shawn's Den // Curiosity and Audacity</title>
+
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.3.0/pure-min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://shawnsden.ga/theme/css/pure.css">
+    <link rel="stylesheet" href="https://shawnsden.ga/theme/css/monokai.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fitvids/1.0.1/jquery.fitvids.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $(".content").fitVids();
+        });
+    </script>
+</head>
+
+<body>
+<div class="pure-g-r" id="layout">
+    <div class="sidebar sidebar-article pure-u">
+        <header class="header-article">
+            <hgroup>
+                <a href="https://shawnsden.ga/author/xiaohong-deng.html" title="See posts by Xiaohong Deng">
+                        <img class="avatar" alt="Xiaohong Deng" src="https://www.gravatar.com/avatar/db05d7ab1c2addcd23f526774e8f6a1d">
+                </a>
+                <h2 class="article-info">Xiaohong Deng</h2>
+                <small class="about-author"></small>
+                <h5>Published</h5>
+                <p>六 15 十二月 2018</p>
+                <a href="/">&larr;Home</a>
+            </hgroup>
+        </header>
+    </div>
+    <div class="pure-u">
+        <div class="content">
+            <section class="post">
+                <header class="post-header">
+                    <h1>Add a Project Page to Your Personal Page</h1>
+                        <p class="post-meta">
+                            // under                                 <a class="post-category" href="https://shawnsden.ga/tag/pelican.html">pelican</a>
+                        </p>
+                </header>
+            </section>
+            <p>Say you have a blog backed by Github personal or organization page which is one per account only. You have a custom domain name for it served by some DNS service. Now you want to use the same custom domain name to serve a project page to showcase your projects, say <code>portfolio.your_custom_domain.ga</code>. How do you do that?</p>
+<h3>Getting Started</h3>
+<p>Github allows you to have unlimited number of Project pages. Create a new one called <code>portfolio</code>.</p>
+<p>In <strong>Setting</strong>, Under <strong>Github Pages</strong>, <strong>Choose a theme</strong>. Once settled, your portfolio page can be accessed at <code>https://your_github_username.github.io/portfolio</code></p>
+<h3>Custom Domain Name</h3>
+<p>Under <strong>Github Pages</strong>, <strong>Custom domain</strong>. Fill in <code>portfolio.your_custom_domain.com</code>.</p>
+<p>Go to your DNS service website, you should have a panel for managing your DNS somewhere. Add a record of type CNAME with NAME <strong>PORTFOLIO</strong>. Point it to your Personal page <code>your_github_username.github.io</code>. That should be all.</p>
+<h3>Custom Theme</h3>
+<p>By choosing a theme, you implicitly added <code>theme: theme_name</code> to <code>_config.yml</code>. It's hard to customize your page layout and style using theme this way. Instead, you should remove that line and copy everything in the theme repository to your project directory. In my case, <code>jekyll-theme-minimal</code> and <code>portfolio</code>.</p>
+<p>Then you can modify the <code>.css</code>, <code>.js</code> and <code>.html</code> files to get the visual effect you want. For example, if you want to add Github or Facebook icons to your project page, you may add <code>font-awesome.min.css</code> hosted at CloudFare to your layout file. Now you can create icons using <code>fa-github</code> or <code>fa-facebook</code> where you want.</p>
+            <div class="hr"></div>
+            <a href="#" class="go-top">Go Top</a>
+<div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = "shawnsden"; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div><footer class="footer">
+    <p>&copy; Shawn's Den &ndash;
+        Built with <a href="https://github.com/PurePelicanTheme/pure">Pure Theme</a>
+        for <a href="http://blog.getpelican.com/">Pelican</a>
+    </p>
+</footer>        </div>
+    </div>
+</div>
+    <script>
+        var $top = $('.go-top');
+
+        // Show or hide the sticky footer button
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 200) {
+                $top.fadeIn(200);
+            } else {
+                $top.fadeOut(200);
+            }
+        });
+
+        // Animate the scroll to top
+        $top.click(function(event) {
+            event.preventDefault();
+            $('html, body').animate({scrollTop: 0}, 300);
+        })
+
+        // Makes sure that the href="#" attached to the <a> elements
+        // don't scroll you back up the page.
+        $('body').on('click', 'a[href="#"]', function(event) {
+            event.preventDefault();
+        });
+    </script>
+</body>
+</html>
