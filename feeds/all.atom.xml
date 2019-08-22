@@ -1,5 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Shawn's Den</title><link href="https://shawnsden.ga/" rel="alternate"></link><link href="https://shawnsden.ga/feeds/all.atom.xml" rel="self"></link><id>https://shawnsden.ga/</id><updated>2018-12-15T13:12:00+08:00</updated><subtitle>Curiosity and Audacity</subtitle><entry><title>Github: Add a Project Page to Your Personal Page</title><link href="https://shawnsden.ga/articles/add-a-project-page-to-your-personal-page.html" rel="alternate"></link><published>2018-12-15T13:12:00+08:00</published><updated>2018-12-15T13:12:00+08:00</updated><author><name>Xiaohong Deng</name></author><id>tag:shawnsden.ga,2018-12-15:/articles/add-a-project-page-to-your-personal-page.html</id><summary type="html">&lt;p&gt;Say you have a blog backed by Github personal or organization page which is one per account only. You have a custom domain name for it served by some DNS service. Now you want to use the same custom domain name to serve a project page to showcase your projects …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Say you have a blog backed by Github personal or organization page which is one per account only. You have a custom domain name for it served by some DNS service. Now you want to use the same custom domain name to serve a project page to showcase your projects, say &lt;code&gt;portfolio.your_custom_domain.ga&lt;/code&gt;. How do you do that?&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Shawn's Den</title><link href="https://shawnsden.ga/" rel="alternate"></link><link href="https://shawnsden.ga/feeds/all.atom.xml" rel="self"></link><id>https://shawnsden.ga/</id><updated>2019-08-22T17:06:00+08:00</updated><subtitle>Curiosity and Audacity</subtitle><entry><title>CS188: Search</title><link href="https://shawnsden.ga/articles/cs188--search.html" rel="alternate"></link><published>2019-08-22T17:06:00+08:00</published><updated>2019-08-22T17:06:00+08:00</updated><author><name>Xiaohong Deng</name></author><id>tag:shawnsden.ga,2019-08-22:/articles/cs188--search.html</id><summary type="html">&lt;p&gt;CS188: Artificial Intelligence, Fall 2018, UC Berkeley by Pieter Abbeel and Dan Klein.&lt;/p&gt;
+&lt;h3&gt;Lectures 1 - 3&lt;/h3&gt;
+&lt;h4&gt;Definition of Search Problems&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;A &lt;strong&gt;state space&lt;/strong&gt;, all possible states in the world. Could be cells with coordinates in a grid. Could be nodes in a graph.&lt;/li&gt;
+&lt;li&gt;A &lt;strong&gt;successor function&lt;/strong&gt;, &lt;span class="math"&gt;\(f: (current state, action …&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;CS188: Artificial Intelligence, Fall 2018, UC Berkeley by Pieter Abbeel and Dan Klein.&lt;/p&gt;
+&lt;h3&gt;Lectures 1 - 3&lt;/h3&gt;
+&lt;h4&gt;Definition of Search Problems&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;A &lt;strong&gt;state space&lt;/strong&gt;, all possible states in the world. Could be cells with coordinates in a grid. Could be nodes in a graph.&lt;/li&gt;
+&lt;li&gt;A &lt;strong&gt;successor function&lt;/strong&gt;, &lt;span class="math"&gt;\(f: (current state, action) \to (action cost, next state)\)&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;A &lt;strong&gt;start state&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;A &lt;strong&gt;goal state&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;State Space and Search Tree&lt;/h4&gt;
+&lt;p&gt;State space can be represented as a graph. Starting from the start state, traversing different sequences results in a search tree that branches. Considering the possibility of cycles in the graph, a search tree can be infinitely large.&lt;/p&gt;
+&lt;h4&gt;Uninformed Search&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Fringe&lt;/strong&gt;, the nodes on the frontier of explored area of the graph, adjacent to unexplored nodes. Once a node is no longer adjacent to any unexplored nodes, we call it &lt;strong&gt;expanded&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;In implementation, when you pop up a goal state from the fringe you declare a success, not when you add it to the fringe.&lt;/li&gt;
+&lt;li&gt;Depth-first search, breath-first search, uniform cost search. Uniform cost search expands nodes which have the lowest accumulated edge weight along the path (backward-cost). UCS often maintains nodes in a priority queue.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;Informed Search&lt;/h4&gt;
+&lt;p&gt;If we have an idea of where we are relative to the goal state, we are &lt;strong&gt;informed&lt;/strong&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Heuristics&lt;/strong&gt;. &lt;strong&gt;Optimality/admissibility&lt;/strong&gt;, that is &lt;span class="math"&gt;\(0\le h(n)\le h(n^*)\)&lt;/span&gt; where &lt;span class="math"&gt;\(h(n^*)\)&lt;/span&gt; is the true cost (e.g., distance from current state to the goal state) and &lt;span class="math"&gt;\(h(n)\)&lt;/span&gt; is the heuristic function estimated cost, and &lt;strong&gt;consistency&lt;/strong&gt;, that is sum of forward-cost and backward-cost is always nondecreasing.&lt;/li&gt;
+&lt;li&gt;Greedy search, lowest edge weight to the next node first (forward-cost); A* search, lowest sum of forward-cost and backward-cost first.&lt;/li&gt;
+&lt;li&gt;Graph search. Once we expanded a node in one path, we never expand it again in another path. This could lead to suboptimal solution. Consistent heuristic function can fix it.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Dominance&lt;/strong&gt;. Heuristic a is dominant over b if &lt;span class="math"&gt;\(\forall{n}, h(n^*) \ge h_a(n) \ge f_b(n) \ge 0\)&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="ucb-cs188"></category></entry><entry><title>Github: Add a Project Page to Your Personal Page</title><link href="https://shawnsden.ga/articles/add-a-project-page-to-your-personal-page.html" rel="alternate"></link><published>2018-12-15T13:12:00+08:00</published><updated>2018-12-15T13:12:00+08:00</updated><author><name>Xiaohong Deng</name></author><id>tag:shawnsden.ga,2018-12-15:/articles/add-a-project-page-to-your-personal-page.html</id><summary type="html">&lt;p&gt;Say you have a blog backed by Github personal or organization page which is one per account only. You have a custom domain name for it served by some DNS service. Now you want to use the same custom domain name to serve a project page to showcase your projects …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Say you have a blog backed by Github personal or organization page which is one per account only. You have a custom domain name for it served by some DNS service. Now you want to use the same custom domain name to serve a project page to showcase your projects, say &lt;code&gt;portfolio.your_custom_domain.ga&lt;/code&gt;. How do you do that?&lt;/p&gt;
 &lt;h3&gt;Getting Started&lt;/h3&gt;
 &lt;p&gt;Github allows you to have unlimited number of Project pages. Create a new one called &lt;code&gt;portfolio&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;In &lt;strong&gt;Setting&lt;/strong&gt;, Under &lt;strong&gt;Github Pages&lt;/strong&gt;, &lt;strong&gt;Choose a theme&lt;/strong&gt;. Once settled, your portfolio page can be accessed at &lt;code&gt;https://your_github_username.github.io/portfolio&lt;/code&gt;&lt;/p&gt;

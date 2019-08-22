@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shawn's Den, Curiosity and Audacity">
+
+        <link rel="alternate"  href="https://shawnsden.ga/feeds/all.atom.xml" type="application/atom+xml" title="Shawn's Den Full Atom Feed"/>
+
+        <title>CS188: Search // Shawn's Den // Curiosity and Audacity</title>
+
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.3.0/pure-min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://shawnsden.ga/theme/css/pure.css">
+    <link rel="stylesheet" href="https://shawnsden.ga/theme/css/monokai.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fitvids/1.0.1/jquery.fitvids.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $(".content").fitVids();
+        });
+    </script>
+</head>
+
+<body>
+<div class="pure-g-r" id="layout">
+    <div class="sidebar sidebar-article pure-u">
+        <header class="header-article">
+            <hgroup>
+                <a href="https://shawnsden.ga/author/xiaohong-deng.html" title="See posts by Xiaohong Deng">
+                        <img class="avatar" alt="Xiaohong Deng" src="https://www.gravatar.com/avatar/db05d7ab1c2addcd23f526774e8f6a1d">
+                </a>
+                <h2 class="article-info">Xiaohong Deng</h2>
+                <small class="about-author"></small>
+                <h5>Published</h5>
+                <p>四 22 八月 2019</p>
+                <a href="/">&larr;Home</a>
+            </hgroup>
+        </header>
+    </div>
+    <div class="pure-u">
+        <div class="content">
+            <section class="post">
+                <header class="post-header">
+                    <h1>CS188: Search</h1>
+                        <p class="post-meta">
+                            // under                                 <a class="post-category" href="https://shawnsden.ga/tag/ucb-cs188.html">ucb-cs188</a>
+                        </p>
+                </header>
+            </section>
+            <p>CS188: Artificial Intelligence, Fall 2018, UC Berkeley by Pieter Abbeel and Dan Klein.</p>
+<h3>Lectures 1 - 3</h3>
+<h4>Definition of Search Problems</h4>
+<ul>
+<li>A <strong>state space</strong>, all possible states in the world. Could be cells with coordinates in a grid. Could be nodes in a graph.</li>
+<li>A <strong>successor function</strong>, <span class="math">\(f: (current state, action) \to (action cost, next state)\)</span></li>
+<li>A <strong>start state</strong></li>
+<li>A <strong>goal state</strong></li>
+</ul>
+<h4>State Space and Search Tree</h4>
+<p>State space can be represented as a graph. Starting from the start state, traversing different sequences results in a search tree that branches. Considering the possibility of cycles in the graph, a search tree can be infinitely large.</p>
+<h4>Uninformed Search</h4>
+<ul>
+<li><strong>Fringe</strong>, the nodes on the frontier of explored area of the graph, adjacent to unexplored nodes. Once a node is no longer adjacent to any unexplored nodes, we call it <strong>expanded</strong>.</li>
+<li>In implementation, when you pop up a goal state from the fringe you declare a success, not when you add it to the fringe.</li>
+<li>Depth-first search, breath-first search, uniform cost search. Uniform cost search expands nodes which have the lowest accumulated edge weight along the path (backward-cost). UCS often maintains nodes in a priority queue.</li>
+</ul>
+<h4>Informed Search</h4>
+<p>If we have an idea of where we are relative to the goal state, we are <strong>informed</strong>.</p>
+<ul>
+<li><strong>Heuristics</strong>. <strong>Optimality/admissibility</strong>, that is <span class="math">\(0\le h(n)\le h(n^*)\)</span> where <span class="math">\(h(n^*)\)</span> is the true cost (e.g., distance from current state to the goal state) and <span class="math">\(h(n)\)</span> is the heuristic function estimated cost, and <strong>consistency</strong>, that is sum of forward-cost and backward-cost is always nondecreasing.</li>
+<li>Greedy search, lowest edge weight to the next node first (forward-cost); A* search, lowest sum of forward-cost and backward-cost first.</li>
+<li>Graph search. Once we expanded a node in one path, we never expand it again in another path. This could lead to suboptimal solution. Consistent heuristic function can fix it.</li>
+<li><strong>Dominance</strong>. Heuristic a is dominant over b if <span class="math">\(\forall{n}, h(n^*) \ge h_a(n) \ge f_b(n) \ge 0\)</span></li>
+</ul>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+            <div class="hr"></div>
+            <a href="#" class="go-top">Go Top</a>
+<div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = "shawnsden"; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div><footer class="footer">
+    <p>&copy; Shawn's Den &ndash;
+        Built with <a href="https://github.com/PurePelicanTheme/pure">Pure Theme</a>
+        for <a href="http://blog.getpelican.com/">Pelican</a>
+    </p>
+</footer>        </div>
+    </div>
+</div>
+    <script>
+        var $top = $('.go-top');
+
+        // Show or hide the sticky footer button
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 200) {
+                $top.fadeIn(200);
+            } else {
+                $top.fadeOut(200);
+            }
+        });
+
+        // Animate the scroll to top
+        $top.click(function(event) {
+            event.preventDefault();
+            $('html, body').animate({scrollTop: 0}, 300);
+        })
+
+        // Makes sure that the href="#" attached to the <a> elements
+        // don't scroll you back up the page.
+        $('body').on('click', 'a[href="#"]', function(event) {
+            event.preventDefault();
+        });
+    </script>
+</body>
+</html>
