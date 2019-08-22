@@ -9,7 +9,7 @@
 &lt;h4&gt;Definition of Search Problems&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;A &lt;strong&gt;state space&lt;/strong&gt;, all possible states in the world. Could be cells with coordinates in a grid. Could be nodes in a graph.&lt;/li&gt;
-&lt;li&gt;A &lt;strong&gt;successor function&lt;/strong&gt;, &lt;span class="math"&gt;\(f: (current-state, action) \to (action-cost, next state)\)&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;A &lt;strong&gt;successor function&lt;/strong&gt;, &lt;span class="math"&gt;\(f: (current-state, action) \to (action-cost, next-state)\)&lt;/span&gt;&lt;/li&gt;
 &lt;li&gt;A &lt;strong&gt;start state&lt;/strong&gt;&lt;/li&gt;
 &lt;li&gt;A &lt;strong&gt;goal state&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;
