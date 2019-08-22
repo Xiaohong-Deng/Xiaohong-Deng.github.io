@@ -4,12 +4,12 @@
 &lt;h4&gt;Definition of Search Problems&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;A &lt;strong&gt;state space&lt;/strong&gt;, all possible states in the world. Could be cells with coordinates in a grid. Could be nodes in a graph.&lt;/li&gt;
-&lt;li&gt;A &lt;strong&gt;successor function&lt;/strong&gt;, &lt;span class="math"&gt;\(f: (current state, action …&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;CS188: Artificial Intelligence, Fall 2018, UC Berkeley by Pieter Abbeel and Dan Klein.&lt;/p&gt;
+&lt;li&gt;A &lt;strong&gt;successor function&lt;/strong&gt;, &lt;span class="math"&gt;\(f: (current-state, action) \to …&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;CS188: Artificial Intelligence, Fall 2018, UC Berkeley by Pieter Abbeel and Dan Klein.&lt;/p&gt;
 &lt;h3&gt;Lectures 1 - 3&lt;/h3&gt;
 &lt;h4&gt;Definition of Search Problems&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;A &lt;strong&gt;state space&lt;/strong&gt;, all possible states in the world. Could be cells with coordinates in a grid. Could be nodes in a graph.&lt;/li&gt;
-&lt;li&gt;A &lt;strong&gt;successor function&lt;/strong&gt;, &lt;span class="math"&gt;\(f: (current state, action) \to (action cost, next state)\)&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;A &lt;strong&gt;successor function&lt;/strong&gt;, &lt;span class="math"&gt;\(f: (current-state, action) \to (action-cost, next state)\)&lt;/span&gt;&lt;/li&gt;
 &lt;li&gt;A &lt;strong&gt;start state&lt;/strong&gt;&lt;/li&gt;
 &lt;li&gt;A &lt;strong&gt;goal state&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;
