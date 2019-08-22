@@ -44,10 +44,13 @@
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
     mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -61,6 +64,8 @@
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -81,6 +86,8 @@
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 &lt;/script&gt;</content><category term="ucb-cs188"></category></entry><entry><title>Github: Add a Project Page to Your Personal Page</title><link href="https://shawnsden.ga/articles/add-a-project-page-to-your-personal-page.html" rel="alternate"></link><published>2018-12-15T13:12:00+08:00</published><updated>2018-12-15T13:12:00+08:00</updated><author><name>Xiaohong Deng</name></author><id>tag:shawnsden.ga,2018-12-15:/articles/add-a-project-page-to-your-personal-page.html</id><summary type="html">&lt;p&gt;Say you have a blog backed by Github personal or organization page which is one per account only. You have a custom domain name for it served by some DNS service. Now you want to use the same custom domain name to serve a project page to showcase your projects …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Say you have a blog backed by Github personal or organization page which is one per account only. You have a custom domain name for it served by some DNS service. Now you want to use the same custom domain name to serve a project page to showcase your projects, say &lt;code&gt;portfolio.your_custom_domain.ga&lt;/code&gt;. How do you do that?&lt;/p&gt;
